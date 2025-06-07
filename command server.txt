@@ -1,0 +1,9 @@
+ssh ftib@ftib.telu-sby.id -p 4722
+
+cd bisindo_train_scripts
+conda activate bisindo
+
+nano data_utils.py
+nano train_model.py
+
+python train_model.py

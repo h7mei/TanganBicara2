@@ -1,0 +1,19 @@
+  GNU nano 6.2                                         train_model.py                                             M         plt.subplot(1, 2, 2)
+    plt.plot(history.history['loss'], label='Training Loss')
+    plt.plot(history.history['val_loss'], label='Validation Loss')
+    plt.title(f'Training and Validation Loss ({MODEL_CHOICE})')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.grid(True)
+
+    plt.tight_layout()
+    plt.savefig(METRICS_PLOT_PATH)
+    print(f"Plot metrik pelatihan disimpan ke: {METRICS_PLOT_PATH}")
+
+    print("\nProses pelatihan dan evaluasi selesai!")
+    print("Anda dapat memantau pelatihan dengan TensorBoard: ")
+    print(f"tensorboard --logdir={os.path.dirname(LOG_DIR)}")
+
+if __name__ == '__main__':
+    main()

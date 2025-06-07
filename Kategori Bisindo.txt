@@ -1,0 +1,20 @@
+1. Salam & Pertanyaan Umum: 
+apa, apa kabar, bagaimana, halo, siapa, kapan, kemana
+
+2. Kondisi atau Perasaan:
+baik, bingung, marah, ramah, sabar, sedih, senang
+
+3. Kegiatan & Tindakan:
+belajar, berdiri, duduk, makan, mandi, melihat, membaca, menulis, minum, tidur
+
+4. Ucapan Waktu & Tempat
+dimana, selamat pagi (tidak ada di list), selamat siang, selamat sore, selamat malam
+
+5. Keluarga & Orang:
+dia, kalian, kami, kamu, kita, mereka, saya
+
+6. Ukuran dan Ciri Fisik:
+pendek, tinggi
+
+7. Ucapan Terima Kasih:
+terimakasih

@@ -1,0 +1,43 @@
+SignWiseApp/
+├── App.js             # Entry point utama aplikasi
+├── app.json           # Konfigurasi Expo
+├── babel.config.js
+├── package.json
+├── assets/            # Untuk gambar, ikon, font
+│   ├── images/
+│   └── icons/
+├── src/
+│   ├── components/    # Komponen UI yang dapat digunakan kembali
+│   │   ├── Button.js
+│   │   └── Input.js
+│   │   └── ...
+│   ├── navigation/    # Stack & Tab Navigators
+│   │   ├── AuthStack.js
+│   │   ├── AppTabs.js
+│   │   └── KamusStack.js
+│   │   └── index.js   # Main Navigator
+│   ├── screens/       # Layar-layar aplikasi (sesuai UI yang diberikan)
+│   │   ├── Auth/
+│   │   │   ├── LoginScreen.js
+│   │   │   ├── RegisterScreen.js
+│   │   │   └── ForgotPasswordScreen.js
+│   │   ├── Main/
+│   │   │   ├── HomeScreen.js    # Main Menu
+│   │   │   ├── TranslatorScreen.js
+│   │   │   ├── CategoryDetailScreen.js
+│   │   │   ├── SignDetailScreen.js    
+│   │   │   ├── DictionaryScreen.js
+│   │   │   └── ProfileScreen.js
+│   │   ├── WalkthroughScreen.js
+│   │   └── SplashScreen.js
+│   ├── services/      # Logika bisnis, integrasi API, Firebase
+│   │   ├── firebaseConfig.js
+│   │   └── authService.js
+│   │   └── apiService.js # Untuk koneksi ke sistem deteksi
+│   ├── store/         # Store Zustand
+│   │   └── authStore.js
+│   │   └── translationStore.js
+│   └── styles/        # Global styles atau utilities
+│       └── colors.js
+│       └── typography.js
+│       └── globalStyles.js
