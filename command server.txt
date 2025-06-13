@@ -1,4 +1,5 @@
 ssh ftib@ftib.telu-sby.id -p 4722
+ssh ftib@eagle.telu-sby.id -p 4722
 
 cd bisindo_train_scripts
 conda activate bisindo

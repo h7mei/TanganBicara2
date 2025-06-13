@@ -13,10 +13,10 @@ import {
 // Impor dari expo-camera
 import { CameraView, useCameraPermissions } from 'expo-camera'; // Kembali ke CameraView Expo
 // Impor dari TensorFlow.js
-// import * as tf from '@tensorflow/tfjs'; // DIKOMENTARI: TF.js core
-// import '@tensorflow/tfjs-react-native'; // DIKOMENTARI: Backend TF.js untuk RN
-// import * as jpeg from 'jpeg-js'; // DIKOMENTARI: Untuk memproses gambar
-// import * as mobilenet from '@tensorflow-models/mobilenet'; // DIKOMENTARI: Contoh utilitas model
+import * as tf from '@tensorflow/tfjs';
+import '@tensorflow/tfjs-react-native'; // Ini yang menginisialisasi backend TF.js untuk RN
+// import * as jpeg from 'jpeg-js'; // Untuk memproses gambar, perlu diinstal: npm install jpeg-js
+// import * as mobilenet from '@tensorflow-models/mobilenet'; // Contoh jika Anda butuh utilitas model
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -43,29 +43,34 @@ export default function TranslatorScreen({ navigation }) {
 
   const [predictionResult, setPredictionResult] = useState('...');
   const [predictionDescription, setPredictionDescription] = useState('...');
-  // const [isModelReady, setIsModelReady] = useState(false); // DIKOMENTARI: State untuk kesiapan model
-  // const [loadingModel, setLoadingModel] = useState(true); // DIKOMENTARI: State untuk loading model
+  const [isModelReady, setIsModelReady] = useState(false); 
+  const [loadingModel, setLoadingModel] = useState(true);
 
   // Model TensorFlow.js akan dimuat di sini
-  // const [tfModel, setTfModel] = useState(null); // DIKOMENTARI: State untuk model TF.js
+  const [tfModel, setTfModel] = useState(null); 
 
-  // const INPUT_SIZE = 224; // DIKOMENTARI
-  // const INPUT_CHANNELS = 3; // DIKOMENTARI
-  // const SEQUENCE_LENGTH = 30; // DIKOMENTARI
+  const INPUT_SIZE = 224; 
+  const INPUT_CHANNELS = 3; 
+  const SEQUENCE_LENGTH = 30; // Untuk model sequence (LSTM)
 
   // Path ke model .tflite kamu di assets/model/
-  // const modelUrl = require('../../../assets/model/best_model_mobilenetv2.tflite'); // DIKOMENTARI
+  // TF.js perlu path string (format file:// atau http://)
+  // Atau bisa juga langsung `require` jika model.json
+  const modelUrl = require('../../../assets/model/best_model_mobilenetv2.tflite'); 
 
   useEffect(() => {
-    // DIKOMENTARI: Seluruh logika inisialisasi TensorFlow dan pemuatan model
-    /*
     async function loadTensorFlow() {
       setLoadingModel(true);
       try {
+        // Inisialisasi TensorFlow.js backend untuk React Native
         await tf.ready();
+        // Coba backend WebGL untuk performa (jika Expo GL terinstal dan compatible)
         // await tf.setBackend('rn-webgl'); 
         console.log(`TensorFlow.js is ready! Using backend: ${tf.getBackend()}`);
 
+        // Muat model TFLite.
+        // `tf.lite.loadTFLiteModel` memerlukan URL atau Asset (untuk React Native).
+        // Ini adalah cara yang benar untuk memuat .tflite di TF.js RN
         const loadedModel = await tf.lite.loadTFLiteModel(modelUrl);
         setTfModel(loadedModel);
         setIsModelReady(true);
@@ -78,76 +83,102 @@ export default function TranslatorScreen({ navigation }) {
       }
     }
     loadTensorFlow();
-    */
-  }, []); // Dependensi kosong karena logika loadTensorFlow dikomentari
+  }, []);
 
   // Fungsi untuk pra-pemrosesan gambar dari base64/URI menjadi tensor
-  // DIKOMENTARI: Seluruh fungsi imageToTensor
-  /*
+  // Ini adalah bagian paling kompleks untuk model sequence (LSTM)
   const imageToTensor = async (base64Image) => {
+    // Anda perlu mengonversi base64 menjadi array piksel
+    // Lalu resize dan normalisasi
+    // Ini membutuhkan library seperti `jpeg-js` (jika base64) atau `expo-image-manipulator`
+
+    // Contoh placeholder (ini tidak akan berfungsi langsung tanpa pra-pemrosesan yang tepat)
+    // Untuk model CNN-LSTM, Anda perlu mengumpulkan 30 frame dan membuat sequence tensor.
+    // Ini adalah tantangan terbesar di sini.
+    // Misalnya, menggunakan `expo-camera`'s `onCameraReady` atau `onTextureCreated`
+    // untuk mendapatkan stream frame, lalu memprosesnya.
+
+    // Untuk TFLite di TF.js RN, Anda perlu tensor [1, 30, 224, 224, 3] (contoh)
+    // atau jika model Anda menerima fitur yang sudah di-pooling, maka [1, 30, 1280]
+    // Berdasarkan MLIR Anda, inputnya adalah gambar (frames, height, width, channels)
     return tf.zeros([1, SEQUENCE_LENGTH, INPUT_SIZE, INPUT_SIZE, INPUT_CHANNELS]); 
   };
-  */
+
 
   // Callback untuk memproses frame dari kamera.
+  // Expo Camera tidak memiliki 'frameProcessor' built-in seperti VisionCamera.
+  // Anda harus menggunakan `onCameraReady` atau `onMountError`
+  // dan kemudian menggunakan `cameraRef.current.takePictureAsync` secara berkala
+  // atau menggunakan `expo-gl-camera` untuk stream texture.
+  
+  // Untuk tujuan demo: kita akan menggunakan interval untuk simulasi deteksi
+  // Anda akan mengganti ini dengan pengambilan frame kamera secara nyata.
   useEffect(() => {
     let intervalId;
-    // DIKOMENTARI: Kondisi isModelReady dan tfModel
-    // if (isModelReady && tfModel && cameraRef.current) { 
-    if (cameraRef.current) { // Hanya cek cameraRef.current agar interval tetap jalan
-        // Ini adalah simulasi.
+    if (isModelReady && tfModel && cameraRef.current) {
+        // Ini adalah simulasi. Anda harus mengganti ini dengan:
+        // 1. Mengambil gambar dari cameraRef.current (misal takePictureAsync)
+        // 2. Mengolah gambar menjadi tensor sequence (30 frame)
+        // 3. Menjalankan inferensi
+
         intervalId = setInterval(async () => {
+            // Contoh sederhana: Ambil gambar sekali, ubah ke base64
+            // Ini akan memicu deteksi per detik, BUKAN streaming real-time
+            // Untuk real-time, Anda perlu expo-camera-gl atau sejenisnya
             try {
-              // Untuk saat ini, kita hanya akan menampilkan teks dummy
-              // tanpa melakukan inferensi model.
-              setPredictionResult("Mencari Gerakan...");
-              setPredictionDescription("Arahkan tangan Anda ke kamera.");
+                // Untuk real-time, ini butuh integrasi lebih dalam dengan `expo-camera`
+                // atau `expo-gl-camera` untuk mendapatkan frame secara terus-menerus
+                // dan mengolahnya di sisi native/JSI.
+                // Jika Anda tidak mengintegrasikan real-time dari cameraRef.current,
+                // ini hanya akan menjadi dummy prediction.
+                
+                // --- placeholder untuk mendapatkan frame real-time ---
+                // const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.5 });
+                // const imageTensor = await imageToTensor(photo.base64);
+                // --- akhir placeholder ---
 
-              // DIKOMENTARI: Seluruh logika inferensi model
-              /*
-              const dummyInputTensor = tf.zeros([1, SEQUENCE_LENGTH, INPUT_SIZE, INPUT_SIZE, INPUT_CHANNELS]);
-              const predictions = tfModel.predict(dummyInputTensor);
-              const probabilities = predictions.dataSync(); 
+                // Placeholder dummy tensor untuk memicu inferensi jika model sudah siap
+                const dummyInputTensor = tf.zeros([1, SEQUENCE_LENGTH, INPUT_SIZE, INPUT_SIZE, INPUT_CHANNELS]);
+                const predictions = tfModel.predict(dummyInputTensor);
+                const probabilities = predictions.dataSync(); // Ambil array probabilitas
 
-              let maxConfidence = -1;
-              let predictedClassIndex = -1;
-              for (let i = 0; i < probabilities.length; i++) {
-                if (probabilities[i] > maxConfidence) {
-                  maxConfidence = probabilities[i];
-                  predictedClassIndex = i;
+                let maxConfidence = -1;
+                let predictedClassIndex = -1;
+                for (let i = 0; i < probabilities.length; i++) {
+                    if (probabilities[i] > maxConfidence) {
+                        maxConfidence = probabilities[i];
+                        predictedClassIndex = i;
+                    }
                 }
-              }
 
-              if (predictedClassIndex !== -1 && maxConfidence > 0.6) {
-                const detectedLabel = LABELS[predictedClassIndex];
-                setPredictionResult(detectedLabel);
-                setPredictionDescription(`Keyakinan: ${(maxConfidence * 100).toFixed(2)}%`);
-              } else {
-                setPredictionResult("...");
-                setPredictionDescription("Menunggu deteksi jelas...");
-              }
+                if (predictedClassIndex !== -1 && maxConfidence > 0.6) {
+                    const detectedLabel = LABELS[predictedClassIndex];
+                    setPredictionResult(detectedLabel);
+                    setPredictionDescription(`Keyakinan: ${(maxConfidence * 100).toFixed(2)}%`);
+                } else {
+                    setPredictionResult("...");
+                    setPredictionDescription("Menunggu deteksi jelas...");
+                }
 
-              predictions.dispose(); 
-              dummyInputTensor.dispose();
-              */
+                predictions.dispose(); // Penting: bebaskan memori tensor
+                dummyInputTensor.dispose();
 
             } catch (e) {
-                console.error("Prediction Error (DIKOMENTARI):", e);
-                setPredictionResult("Error Deteksi (DIKOMENTARI)");
+                console.error("Prediction Error:", e);
+                setPredictionResult("Error Deteksi");
                 setPredictionDescription("Gagal memproses frame.");
             }
         }, 1000); // Deteksi setiap 1 detik
 
-    } 
-    // else if (!isModelReady && !loadingModel && tfModel) { // DIKOMENTARI: Kondisi error model
-    //     setPredictionResult("Error Model");
-    //     setPredictionDescription("Model AI tidak siap untuk deteksi.");
-    // }
+    } else if (!isModelReady && !loadingModel && tfModel) {
+        setPredictionResult("Error Model");
+        setPredictionDescription("Model AI tidak siap untuk deteksi.");
+    }
     
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, []); // Dependensi dikurangi karena logika TF.js dikomentari
+  }, [isModelReady, tfModel, loadingModel]); // Dependensi
 
   // Fungsi untuk mengganti kamera (depan/belakang)
   const toggleCameraFacing = () => {
@@ -176,42 +207,34 @@ export default function TranslatorScreen({ navigation }) {
   }
   // --- END: Izin Kamera ---
 
-  // Kita akan menonaktifkan kondisi loadingModel di sini
-  // agar CameraView tetap terlihat jika izin sudah diberikan
-  const loadingModel = false; // DIUBAH SEMENTARA
-  const isModelReady = true; // DIUBAH SEMENTARA
-
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Arahkan Kamera Ke Tangan!</Text>
 
       <View style={styles.cameraWrapper}>
-        {/*
-        DIKOMENTARI: Logika overlay loading model. 
-        Kita akan tetap menampilkan CameraView selama izin diberikan.
-        */}
-        {/*
         {loadingModel || !isModelReady ? (
           <View style={styles.cameraLoadingOverlay}>
             <ActivityIndicator size="large" color="#1D428A" />
             <Text style={styles.cameraLoadingText}>
               {loadingModel ? "Memuat model AI..." : "Model AI tidak siap."}
             </Text>
-            {!loadingModel && tfModel && !tfModel.isLoaded() && ( 
+            {!loadingModel && tfModel && !tfModel.isLoaded() && (
                 <Text style={styles.cameraLoadingSubText}>Model belum dimuat oleh TF.js.</Text>
             )}
-            {!loadingModel && !tfModel && state.error && ( 
+            {!loadingModel && !tfModel && state.error && ( // state.error dari useTensorflowLite kalau ada
                 <Text style={styles.cameraLoadingSubText}>{state.error.message || "Periksa log konsol."}</Text>
             )}
           </View>
         ) : (
-        */}
           <CameraView // Menggunakan CameraView dari expo-camera
             ref={cameraRef}
             style={styles.cameraContainer}
             facing={facing} // 'front' atau 'back'
+            // Properti untuk Expo Camera (bukan TfliteCamera atau VisionCamera)
+            // Ini tidak punya frameProcessor bawaan.
+            // onCameraReady={...} // Anda bisa gunakan ini untuk memulai interval deteksi
           />
-        {/* )} */}
+        )}
         
         <TouchableOpacity style={styles.flipButton} onPress={toggleCameraFacing}>
           <Ionicons name="camera-reverse" size={24} color="white" />

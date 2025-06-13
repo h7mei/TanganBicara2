@@ -6,6 +6,9 @@ SignWiseApp/
 ├── assets/            # Untuk gambar, ikon, font
 │   ├── images/
 │   └── icons/
+│   └── logos/
+│   └   model/
+│   │   ├── best_model_mobilenetv2.tflite
 ├── src/
 │   ├── components/    # Komponen UI yang dapat digunakan kembali
 │   │   ├── Button.js
@@ -21,6 +24,9 @@ SignWiseApp/
 │   │   │   ├── LoginScreen.js
 │   │   │   ├── RegisterScreen.js
 │   │   │   └── ForgotPasswordScreen.js
+│   │   ├── Admin/
+│   │   │   ├── AdminDashboardScreen.js
+│   │   │   ├── UserManagementScreen.js
 │   │   ├── Main/
 │   │   │   ├── HomeScreen.js    # Main Menu
 │   │   │   ├── TranslatorScreen.js
