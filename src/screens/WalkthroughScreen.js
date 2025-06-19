@@ -1,27 +1,16 @@
 // src/screens/WalkthroughScreen.js
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  SafeAreaView, // Tambahkan SafeAreaView
-} from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, SafeAreaView } from "react-native";
 
-import TopShape from '../../assets/images/TopShape.png'; // Sesuaikan path jika berbeda
-import BottomShape from '../../assets/images/BottomShape.png'; // Sesuaikan path jika berbeda
-import HandImage from '../../assets/images/hand.png'; // Sesuaikan path jika berbeda
+import TopShape from "../../assets/images/TopShape.png";
+import BottomShape from "../../assets/images/BottomShape.png";
+import HandImage from "../../assets/images/hand.png";
 
-const WalkthroughScreen = ({ navigation }) => { 
-  const [screenHeight, setScreenHeight] = useState(
-    Dimensions.get("window").height
-  );
+const WalkthroughScreen = ({ navigation }) => {
+  const [screenHeight, setScreenHeight] = useState(Dimensions.get("window").height);
 
   useEffect(() => {
-    const updateHeight = () =>
-      setScreenHeight(Dimensions.get("window").height);
+    const updateHeight = () => setScreenHeight(Dimensions.get("window").height);
     const subscription = Dimensions.addEventListener("change", updateHeight);
     return () => {
       subscription?.remove();
@@ -29,12 +18,11 @@ const WalkthroughScreen = ({ navigation }) => {
   }, []);
 
   const handleNavigate = () => {
-    // Mengarahkan ke AuthStack (Login/Register) menggunakan React Navigation
-    navigation.replace('AuthStack');
+    navigation.replace("AuthStack");
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}> {/* Gunakan SafeAreaView */}
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Background utama */}
         <View style={styles.background} />
@@ -56,11 +44,7 @@ const WalkthroughScreen = ({ navigation }) => {
         </View>
 
         {/* Gambar tangan */}
-        <Image
-          source={HandImage}
-          style={[styles.handImage, { bottom: screenHeight * 0.15 }]}
-          resizeMode="contain"
-        />
+        <Image source={HandImage} style={[styles.handImage, { bottom: screenHeight * 0.15 }]} resizeMode="contain" />
 
         {/* Tombol Masuk */}
         <TouchableOpacity style={styles.button} onPress={handleNavigate}>
@@ -74,14 +58,14 @@ const WalkthroughScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#1E3A8A", // Warna latar belakang utama
+    backgroundColor: "#1E3A8A",
   },
   container: {
     flex: 1,
-    backgroundColor: "#1E3A8A", // Warna latar belakang utama
+    backgroundColor: "#1E3A8A",
     justifyContent: "center",
     alignItems: "center",
-    position: 'relative', // Penting untuk positioning absolut anak-anak
+    position: "relative",
   },
   background: {
     position: "absolute",
@@ -91,15 +75,15 @@ const styles = StyleSheet.create({
   },
   topShapeWrapper: {
     position: "absolute",
-    top: -100, // Sesuaikan posisi agar sesuai desain
-    left: -100, // Sesuaikan posisi agar sesuai desain
+    top: -100,
+    left: -100,
     opacity: 0.5,
     transform: [{ rotate: "30deg" }],
   },
   bottomShapeWrapper: {
     position: "absolute",
-    bottom: -100, // Sesuaikan posisi agar sesuai desain
-    right: -100, // Sesuaikan posisi agar sesuai desain
+    bottom: -100,
+    right: -100,
     opacity: 0.5,
     transform: [{ rotate: "-30deg" }],
   },
@@ -110,30 +94,29 @@ const styles = StyleSheet.create({
   textContainer: {
     position: "absolute",
     alignItems: "center",
-    // top: screenHeight * 0.32, // Ini sudah diatur inline style
   },
   title: {
     fontSize: 34,
     fontWeight: "bold",
-    color: "#FFD700", // Kuning
+    color: "#FFD700",
   },
   subtitle: {
     fontSize: 20,
     fontStyle: "italic",
-    color: "#E0E0E0", // Abu-abu terang
+    color: "#E0E0E0",
     marginTop: 6,
   },
   handImage: {
     position: "absolute",
     width: "100%",
     height: "35%",
-    top: "42%", // Sesuaikan jika perlu
-    left: -30, // Sesuaikan jika perlu
+    top: "42%",
+    left: -30,
   },
   button: {
     position: "absolute",
     bottom: 50,
-    backgroundColor: "#FFD700", // Kuning
+    backgroundColor: "#FFD700",
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,
@@ -144,7 +127,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   buttonText: {
-    color: "#1D428A", // Biru gelap
+    color: "#1D428A",
     fontSize: 16,
     fontWeight: "bold",
   },

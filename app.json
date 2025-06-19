@@ -13,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourname.signwiseapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +32,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "15d2a587-2347-43e3-9bf0-abb0f950809b"
+        "projectId": "68e8655a-ba49-4700-899f-c2601a9cf67d"
       }
     }
   }
